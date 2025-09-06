@@ -1,14 +1,18 @@
-import { useState, useEffect } from 'react';
-import { List, X } from '@phosphor-icons/react';
+import { useState, useEffect } from "react";
+import { List, X } from "@phosphor-icons/react";
 
 const navItems = [
-  { name: 'How It Works', href: '#how-it-works' },
-  { name: 'Features', href: '#features' },
-  { name: 'Testimonials', href: '#testimonials' },
-  { name: 'FAQ', href: '#faq' },
+  { name: "Home", href: "/" },
+  { name: "Features", href: "#features" },
+  { name: "Pricing", href: "/pricing" },
+  { name: "Contact", href: "/contact" },
+  { name: "Privacy", href: "/privacy" },
+  { name: "Terms", href: "/terms" },
+  { name: "Refund Policy", href: "/refund-policy" },
+  // Add other navigation links as needed.
 ];
 
-export default function Navigation() {
+export default function Navigation({ home = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -17,99 +21,108 @@ export default function Navigation() {
       setIsScrolled(window.scrollY > 20);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+  const handleNavClick = (href: string) => {
+    // Close mobile menu on click
     setIsOpen(false);
+
+    // Handle smooth scrolling for anchor links
+    if (href.startsWith("#")) {
+      // Use setTimeout to ensure the menu is closed before scrolling
+      setTimeout(() => {
+        const element = document.querySelector(href);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 0);
+    } else {
+      // For regular links, navigate normally
+      window.location.href = href;
+    }
   };
 
+  const navBarClass = `
+    fixed top-0 left-0 right-0 z-50 transition-all duration-300 mb-10
+    ${
+      isScrolled || !home
+        ? "bg-slate-900/80 backdrop-blur-sm shadow-lg"
+        : "bg-transparent"
+    }
+  `;
+
   return (
-    <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-white/80 backdrop-blur-md shadow-lg border-b border-gray-200/20' 
-          : 'bg-transparent'
-      }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Logo */}
-            <div className="flex-shrink-0">
-              <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                Interview Survival Co-pilot
-              </span>
-            </div>
-
-            {/* Desktop Navigation */}
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-8">
-                {navItems.map((item) => (
-                  <button
-                    key={item.name}
-                    onClick={() => scrollToSection(item.href)}
-                    className="text-gray-700 hover:text-indigo-600 transition-colors duration-200 text-sm font-medium"
-                  >
-                    {item.name}
-                  </button>
-                ))}
-                <button
-                  onClick={() => scrollToSection('#hero')}
-                  className="neuro-btn text-white px-6 py-2 rounded-xl text-sm font-medium"
-                >
-                  Get Early Access
-                </button>
+    <nav className={navBarClass}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
+          {" "}
+          {/* Increased height for better spacing */}
+          {/* Logo */}
+          <div className="flex items-center">
+            <a href="/" className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">K</span>
               </div>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="text-gray-700 hover:text-indigo-600 transition-colors duration-200"
-              >
-                {isOpen ? <X size={24} /> : <List size={24} />}
-              </button>
-            </div>
+              <span className="text-xl font-bold text-white">KnotBot</span>
+            </a>
           </div>
-        </div>
-      </nav>
-
-      {/* Mobile Navigation Overlay */}
-      <div className={`fixed inset-0 z-40 md:hidden transition-opacity duration-300 ${
-        isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-      }`}>
-        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
-        
-        {/* Mobile Menu Tray */}
-        <div className={`absolute top-0 right-0 h-full w-80 bg-white/95 backdrop-blur-xl shadow-2xl transform transition-transform duration-300 ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}>
-          <div className="pt-20 px-6">
-            <div className="space-y-6">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-4">
+            <div className="flex items-baseline space-x-8">
               {navItems.map((item) => (
                 <button
                   key={item.name}
-                  onClick={() => scrollToSection(item.href)}
-                  className="block w-full text-left text-gray-800 hover:text-indigo-600 transition-colors duration-200 text-lg font-medium py-2"
+                  onClick={() => handleNavClick(item.href)}
+                  className={`text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                    !home && item.name === "Features" ? "hidden" : "text-white"
+                  }`}
                 >
                   {item.name}
                 </button>
               ))}
+            </div>
+            {/* CTA Button */}
+            <button className="neuro-btn text-white px-6 py-2 rounded-lg font-medium text-sm">
+              Add to Chrome - Free
+            </button>
+          </div>
+          {/* Mobile menu button */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="glass text-white p-2 rounded-lg inline-flex items-center justify-center"
+              aria-label="Main menu"
+              aria-expanded={isOpen}
+            >
+              {isOpen ? <X size={24} /> : <List size={24} />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Navigation */}
+      {isOpen && (
+        <div className="md:hidden" id="mobile-menu">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 glass rounded-xl mt-2 mx-4">
+            {navItems.map((item) => (
               <button
-                onClick={() => scrollToSection('#hero')}
-                className="neuro-btn text-white px-8 py-3 rounded-xl text-lg font-medium w-full mt-8"
+                key={item.name}
+                onClick={() => handleNavClick(item.href)}
+                className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-colors w-full text-left"
               >
-                Get Early Access
+                {item.name}
+              </button>
+            ))}
+            <div className="pt-3 mt-3 border-t border-white/10">
+              <button className="neuro-btn text-white px-6 py-2 rounded-lg font-medium text-sm w-full">
+                Add to Chrome - Free
               </button>
             </div>
           </div>
         </div>
-      </div>
-    </>
+      )}
+    </nav>
   );
 }
