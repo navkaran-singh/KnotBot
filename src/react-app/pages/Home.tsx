@@ -7,10 +7,12 @@ import Testimonials from "@/react-app/components/Testimonials";
 import Mission from "@/react-app/components/Mission";
 import FAQ from "@/react-app/components/FAQ";
 import Footer from "@/react-app/components/Footer";
+import Navigation from "../components/Navigation";
 
 export default function Home() {
   return (
     <div className="min-h-screen">
+      <Navigation />
       <Hero />
       <FeaturedIn />
       <PainVsSolution />
