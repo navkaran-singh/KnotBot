@@ -12,6 +12,7 @@ import Contact from "@/react-app/pages/Contact";
 import NotFound from "@/react-app/pages/NotFound";
 import RefundPolicy from "./pages/RefundPolicy";
 import Terms from "./pages/Terms";
+import Shipping from "./pages/Shipping";
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
         <Route path="/terms" element={<Terms />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/refund-policy" element={<RefundPolicy />} />
+        <Route path="/shipping" element={<Shipping />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

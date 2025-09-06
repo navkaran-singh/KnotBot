@@ -9,6 +9,7 @@ const navItems = [
   { name: "Privacy", href: "/privacy" },
   { name: "Terms", href: "/terms" },
   { name: "Refund Policy", href: "/refund-policy" },
+  { name: "Shipping", href: "/shipping" },
   // Add other navigation links as needed.
 ];
 
